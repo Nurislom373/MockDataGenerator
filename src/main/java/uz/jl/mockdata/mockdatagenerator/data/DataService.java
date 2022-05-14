@@ -21,16 +21,16 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class DataService {
     private final DataRepository repository;
+    private final WriteFileProcessor processor;
     private final Faker faker;
 
     public String generate(DataCreateDTO dto) {
         String file = createFile(dto.getTableName(), dto.getFileType());
         try (FileWriter fileWriter = new FileWriter(file)) {
-            fileWriter.write(parseString(dto.getFields()));
             IntStream.range(0, dto.getRowCount()).forEach(i -> {
-                List<Field> mockDataList = getMockDataList(dto);
                 try {
-                    fileWriter.write(parseStringWithField(mockDataList));
+                    List<Field> mockDataList = getMockDataList(dto);
+                    fileWriter.write(processor.processorType(dto.getFileType(), mockDataList, dto.getTableName()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -55,7 +55,7 @@ public class DataService {
     public String getMockData(String type) {
         FieldEnum fieldEnum = FieldEnum.valueOf(type.toUpperCase(Locale.ROOT));
         return switch (fieldEnum) {
-            case ID -> faker.number().digit();
+            case ID -> faker.idNumber().valid();
             case UUID -> faker.internet().uuid();
             case FIRST_NAME -> faker.name().firstName();
             case LAST_NAME -> faker.name().lastName();
@@ -63,7 +63,7 @@ public class DataService {
             case ADDRESS -> faker.address().fullAddress();
             case JOB -> faker.job().title();
             case NAME -> faker.name().name();
-            case PASSWORD -> faker.crypto().md5();
+            case MD5 -> faker.crypto().md5();
             case NUMBER -> faker.phoneNumber().cellPhone();
             case TIME -> faker.date().birthday().toString();
             case UNIVERSITY -> faker.university().name();
