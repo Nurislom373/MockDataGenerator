@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class DataService {
             IntStream.range(0, dto.getRowCount()).forEach(i -> {
                 try {
                     List<Field> mockDataList = getMockDataList(dto);
-                    fileWriter.write(processor.processorType(dto.getFileType(), mockDataList, dto.getTableName()));
+                    fileWriter.write(processor.processorType(dto.getFileType(), mockDataList, dto.getTableName(), dto.getRowCount()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -82,24 +83,4 @@ public class DataService {
             return null;
         }
     }
-
-    private String parseString(List<Field> fields) {
-        String s = "";
-        for (int i = 0; i < fields.size(); i++) {
-            Field field = fields.get(i);
-            s = s.concat(field.getFieldName()) + ",";
-        }
-        return s.concat("\n");
-    }
-
-    private String parseStringWithField(List<Field> fields) {
-        String s = "";
-        for (int i = 0; i < fields.size(); i++) {
-            Field field = fields.get(i);
-            s = s.concat(field.getFieldType()) + ",";
-        }
-        return s.concat("\n");
-    }
-
-
 }

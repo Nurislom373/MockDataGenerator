@@ -11,12 +11,13 @@ import java.util.Locale;
 public class WriteFileProcessor {
 
     private static byte csv_start = 0;
+    private static int json_count = 0;
 
-    public String processorType(String type, List<Field> list, String tableName) {
+    public String processorType(String type, List<Field> list, String tableName, int rowCount) {
         return switch (DownloadTypeEnum.valueOf(type.toUpperCase(Locale.ROOT))) {
             case CSV -> writeCSV(list);
             case SQL -> writeSQL(list, tableName);
-            case JSON -> writeJSON(list);
+            case JSON -> writeJSON(list, rowCount);
             default -> throw new IllegalStateException("Unexpected value: " + DownloadTypeEnum.valueOf(type.toUpperCase(Locale.ROOT)));
         };
     }
@@ -66,7 +67,39 @@ public class WriteFileProcessor {
         return builder.substring(0, builder.length() - 1).concat("\n");
     }
 
-    private String writeJSON(List<Field> list) {
-        return "hello";
+    private String writeJSON(List<Field> list, int rowCount) {
+        if (json_count == 0) {
+            json_count++;
+            return writeJsonStart(list);
+        } else if ((rowCount - 1) == json_count) {
+            return writeJsonEnd(list);
+        } else {
+            json_count++;
+            return writeJsonNormal(list);
+        }
+    }
+
+    private String writeJsonStart(List<Field> list) {
+        StringBuilder builder = new StringBuilder("[{");
+        for (Field field : list) {
+            builder.append("\"").append(field.getFieldName()).append("\"").append(":\"").append(field.getFieldType()).append("\",");
+        }
+        return builder.substring(0, builder.length() - 1).concat("}, \n");
+    }
+
+    private String writeJsonNormal(List<Field> list) {
+        StringBuilder builder = new StringBuilder("{");
+        for (Field field : list) {
+            builder.append("\"").append(field.getFieldName()).append("\"").append(":\"").append(field.getFieldType()).append("\",");
+        }
+        return builder.substring(0, builder.length() - 1).concat("}, \n");
+    }
+
+    private String writeJsonEnd(List<Field> list) {
+        StringBuilder builder = new StringBuilder("{");
+        for (Field field : list) {
+            builder.append("\"").append(field.getFieldName()).append("\"").append(":\"").append(field.getFieldType()).append("\",");
+        }
+        return builder.substring(0, builder.length() - 1).concat("}]");
     }
 }

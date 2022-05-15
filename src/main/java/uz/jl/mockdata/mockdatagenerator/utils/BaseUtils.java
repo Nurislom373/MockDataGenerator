@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
+
 @Getter
 @Setter
 @Component
