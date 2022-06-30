@@ -1,8 +1,10 @@
 package uz.jl.mockdata.mockdatagenerator.data.entity;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,11 +18,16 @@ public class DataEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator", parameters = {@org.hibernate.annotations.Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
+    @Column(name = "code", unique = true, nullable = false, updatable = false, columnDefinition = "uuid")
+    private UUID code;
+
     @Column(name = "table_name", nullable = false, length = 100)
     private String tableName;
 
     @Column(name = "model", nullable = false, columnDefinition = "json")
-    private String model;
+    private String fileType;
 
     @Column(name = "count", nullable = false)
     private Long count;

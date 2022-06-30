@@ -10,14 +10,11 @@ import java.util.Locale;
 @Component
 public class WriteFileProcessor {
 
-    private static byte csv_start = 0;
-    private static int json_count = 0;
-
-    public String processorType(String type, List<Field> list, String tableName, int rowCount) {
+    public String processorType(String type, List<Field> list, String tableName, int rowCount, int count) {
         return switch (DownloadTypeEnum.valueOf(type.toUpperCase(Locale.ROOT))) {
-            case CSV -> writeCSV(list);
+            case CSV -> writeCSV(list, count);
             case SQL -> writeSQL(list, tableName);
-            case JSON -> writeJSON(list, rowCount);
+            case JSON -> writeJSON(list, rowCount, count);
             default -> throw new IllegalStateException("Unexpected value: " + DownloadTypeEnum.valueOf(type.toUpperCase(Locale.ROOT)));
         };
     }
@@ -38,9 +35,8 @@ public class WriteFileProcessor {
         return s.substring(0, s.length() - 2).concat(");").concat("\n");
     }
 
-    private String writeCSV(List<Field> list) {
-        if (csv_start == 0) {
-            csv_start++;
+    private String writeCSV(List<Field> list, int count) {
+        if (count == 0) {
             return writeCSVWithStart(list);
         } else {
             return writeCSVNormal(list);
@@ -67,14 +63,12 @@ public class WriteFileProcessor {
         return builder.substring(0, builder.length() - 1).concat("\n");
     }
 
-    private String writeJSON(List<Field> list, int rowCount) {
-        if (json_count == 0) {
-            json_count++;
+    private String writeJSON(List<Field> list, int rowCount, int count) {
+        if (count == 0) {
             return writeJsonStart(list);
-        } else if ((rowCount - 1) == json_count) {
+        } else if ((rowCount - 1) == count) {
             return writeJsonEnd(list);
         } else {
-            json_count++;
             return writeJsonNormal(list);
         }
     }

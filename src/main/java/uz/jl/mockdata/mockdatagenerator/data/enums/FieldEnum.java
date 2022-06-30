@@ -24,8 +24,11 @@ public enum FieldEnum {
     UNIVERSITY(3, "University", ""),
     TEAM(3, "Team", ""),
     PHONE_NUMBER(1, "Phone Number", ""),
+    BOOLEAN(1, "BOOLEAN", ""),
     LOREM(3, "Lorem", ""),
     UUID(1, "UUID", ""),
+    DATE_NOW(1, "DATE_NOW", ""),
+    ZERO_ONE(1, "ZERO_ONE", ""),
     MD5(1, "MD5", "");
 
     private final Integer categoryId;

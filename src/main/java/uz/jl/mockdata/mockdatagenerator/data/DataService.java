@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,7 +32,7 @@ public class DataService {
             IntStream.range(0, dto.getRowCount()).forEach(i -> {
                 try {
                     List<Field> mockDataList = getMockDataList(dto);
-                    fileWriter.write(processor.processorType(dto.getFileType(), mockDataList, dto.getTableName(), dto.getRowCount()));
+                    fileWriter.write(processor.processorType(dto.getFileType(), mockDataList, dto.getTableName(), dto.getRowCount(), i));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -62,10 +63,13 @@ public class DataService {
             case LAST_NAME -> faker.name().lastName();
             case LOREM -> faker.lorem().sentence();
             case ADDRESS -> faker.address().fullAddress();
+            case BOOLEAN -> String.valueOf(faker.bool().bool());
             case JOB -> faker.job().title();
             case NAME -> faker.name().name();
+            case ZERO_ONE -> Integer.toString(1);
+            case DATE_NOW -> LocalDateTime.now().toString();
             case MD5 -> faker.crypto().md5();
-            case NUMBER -> faker.phoneNumber().cellPhone();
+            case NUMBER -> String.valueOf(faker.number().numberBetween(0, 1000));
             case TIME -> faker.date().birthday().toString();
             case UNIVERSITY -> faker.university().name();
             default -> throw new IllegalStateException("Unexpected value: " + FieldEnum.valueOf(type));
