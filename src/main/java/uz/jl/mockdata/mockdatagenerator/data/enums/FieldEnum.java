@@ -14,6 +14,7 @@ public enum FieldEnum {
     EMAIL(1, "Email", ""),
     PASSWORD(1, "Password", ""),
     ADDRESS(1, "Address", ""),
+    IPV4ADDRESS(1, "Ipv4Address", ""),
     GENDER(1, "Gender", ""),
     NUMBER(2, "Number", ""),
     SENTENCES(3, "Sentences", ""),

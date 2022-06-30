@@ -21,20 +21,20 @@ public class DataEntity {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator", parameters = {@org.hibernate.annotations.Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
     @Column(name = "code", unique = true, nullable = false, updatable = false, columnDefinition = "uuid")
-    private UUID code;
+    private UUID code = UUID.randomUUID();
 
     @Column(name = "table_name", nullable = false, length = 100)
     private String tableName;
 
-    @Column(name = "model", nullable = false, columnDefinition = "json")
+    @Column(name = "model", nullable = false)
     private String fileType;
 
     @Column(name = "count", nullable = false)
-    private Long count;
+    private int count;
 
-    @Column(name = "download_type", nullable = false, length = 100)
-    private String downloadType;
+    @Column(name = "path", nullable = false)
+    private String path;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Integer userId;
 }
