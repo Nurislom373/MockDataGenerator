@@ -35,6 +35,9 @@ public class DataEntity {
     @Column(name = "path", nullable = false)
     private String path;
 
+    @Column(name = "is_get", nullable = false)
+    private boolean isGet;
+
     @Column(name = "user_id")
     private Integer userId;
 }

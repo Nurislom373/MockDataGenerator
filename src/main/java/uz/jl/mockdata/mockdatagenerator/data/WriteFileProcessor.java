@@ -10,12 +10,12 @@ import java.util.Locale;
 @Component
 public class WriteFileProcessor {
 
-    public String processorType(String type, List<Field> list, String tableName, int rowCount, int count) {
-        return switch (DownloadTypeEnum.valueOf(type.toUpperCase(Locale.ROOT))) {
+    public String processorType(DownloadTypeEnum type, List<Field> list, String tableName, int rowCount, int count) {
+        return switch (type) {
             case CSV -> writeCSV(list, count);
             case SQL -> writeSQL(list, tableName);
             case JSON -> writeJSON(list, rowCount, count);
-            default -> throw new IllegalStateException("Unexpected value: " + DownloadTypeEnum.valueOf(type.toUpperCase(Locale.ROOT)));
+            default -> throw new IllegalStateException("Unexpected value: " + type);
         };
     }
 

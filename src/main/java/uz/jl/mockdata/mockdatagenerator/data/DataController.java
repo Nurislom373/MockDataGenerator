@@ -26,9 +26,4 @@ public class DataController {
     public ResponseEntity<Resource> get(@PathVariable UUID id) {
         return new ResponseEntity<>(service.get(id), HttpStatus.OK);
     }
-
-    @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Data<String>> delete(@PathVariable UUID id) {
-        return new ResponseEntity<>(new Data<>(service.delete(id)), HttpStatus.OK);
-    }
 }

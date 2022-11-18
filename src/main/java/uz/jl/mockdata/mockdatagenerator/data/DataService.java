@@ -10,5 +10,5 @@ public interface DataService {
 
     Resource get(UUID id);
 
-    String delete(UUID id);
+    void delete();
 }

@@ -4,11 +4,14 @@ import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uz.jl.mockdata.mockdatagenerator.data.dto.DataCreateDTO;
 import uz.jl.mockdata.mockdatagenerator.data.entity.DataEntity;
 import uz.jl.mockdata.mockdatagenerator.data.entity.Field;
+import uz.jl.mockdata.mockdatagenerator.data.enums.DownloadTypeEnum;
 import uz.jl.mockdata.mockdatagenerator.data.enums.FieldEnum;
 
 import java.io.File;
@@ -25,19 +28,23 @@ import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class DataServiceImpl implements DataService {
+
     private final DataRepository repository;
     private final WriteFileProcessor processor;
     private final Faker faker;
 
     @Override
     public UUID generate(DataCreateDTO dto) {
-        String file = createFile(dto.getTableName(), dto.getFileType());
+        checkData(dto);
+        String file = createFile(dto.getTableName(), DownloadTypeEnum.getValue(dto.getFileType()));
         try (FileWriter fileWriter = new FileWriter(file)) {
             IntStream.range(0, dto.getRowCount()).forEach(i -> {
                 try {
-                    List<Field> mockDataList = getMockDataList(dto);
-                    fileWriter.write(processor.processorType(dto.getFileType(), mockDataList, dto.getTableName(), dto.getRowCount(), i));
+                    List<Field> mockDataList = getMockDataList(dto, i);
+                    fileWriter.write(processor.processorType(dto.getFileType(), mockDataList,
+                            dto.getTableName(), dto.getRowCount(), i));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -50,8 +57,12 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public Resource get(UUID id) {
+        DataEntity dataEntity = repository.findByCode(id)
+                .orElseThrow(() -> new NotFoundException("Your Table data is not found!"));
         try {
-            return new FileUrlResource(repository.findByCode(id).orElseThrow(() -> new NotFoundException("Your Table data is not found!")).getPath());
+            dataEntity.setGet(true);
+            repository.save(dataEntity);
+            return new FileUrlResource(dataEntity.getPath());
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
@@ -59,39 +70,63 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public String delete(UUID id) {
-        DataEntity data = repository.findByCode(id).orElseThrow(() -> new NotFoundException("Table data not found"));
-        File file = new File(data.getPath());
-        if (file.delete()) {
-            repository.deleteByCode(id);
-            return "Successfully deleted file";
-        } else {
-            return "Failed to delete the file";
+    @Scheduled(fixedDelay = 10000)
+    public void delete() {
+        List<DataEntity> list = repository.findAll().stream()
+                .filter(DataEntity::isGet)
+                .toList();
+        if (!list.isEmpty()) {
+            list.forEach((data) -> {
+                boolean delete = new File(data.getPath()).delete();
+                if (delete) {
+                    System.out.println("Successfully Deleted File!");
+                }
+            });
+            repository.deleteAll(list);
+        }
+    }
+
+    private void checkData(DataCreateDTO dto) {
+        if (dto.getRowCount() < 0 || dto.getRowCount() > 1e7) {
+            throw new RuntimeException("Invalid Row Count!");
         }
     }
 
     private UUID save(DataCreateDTO dto) {
         DataEntity data = new DataEntity();
         data.setCount(dto.getRowCount());
-        data.setFileType(dto.getFileType());
+        data.setFileType(DownloadTypeEnum.getValue(dto.getFileType()));
         data.setTableName(dto.getTableName());
-        data.setPath("src/main/resources/file/" + dto.getTableName() + "." + dto.getFileType());
+        data.setPath("src/main/resources/file/" + dto.getTableName() + "." + DownloadTypeEnum.getValue(dto.getFileType()));
         return repository.save(data).getCode();
     }
 
-    private List<Field> getMockDataList(DataCreateDTO dto) {
+    private List<Field> getMockDataList(DataCreateDTO dto, Integer id) {
         List<Field> fieldList = new ArrayList<>();
         for (Field field : dto.getFields()) {
             Field field1 = new Field();
             field1.setFieldName(field.getFieldName());
-            field1.setFieldType(getMockData(field.getFieldType()));
+            field1.setFieldType(getMockData(field.getFieldType(), id));
             fieldList.add(field1);
         }
         return fieldList;
     }
 
-    public String getMockData(String type) {
+    private List<Field> getMockDataListWithStream(DataCreateDTO dto, Integer id) {
+        return dto.getFields()
+                .stream()
+                .map((field) -> setFieldVal(field, id))
+                .toList();
+    }
+
+    private Field setFieldVal(Field field, Integer id) {
+        field.setFieldType(getMockData(field.getFieldType(), id));
+        return field;
+    }
+
+    public String getMockData(String type, Integer id) {
         return switch (FieldEnum.valueOf(type.toUpperCase(Locale.ROOT))) {
+            case ID -> String.valueOf(id + 1);
             case UUID -> faker.internet().uuid();
             case FIRST_NAME -> faker.name().firstName();
             case LAST_NAME -> faker.name().lastName();

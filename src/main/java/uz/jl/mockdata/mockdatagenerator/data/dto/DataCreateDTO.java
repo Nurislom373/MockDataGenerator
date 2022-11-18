@@ -2,6 +2,7 @@ package uz.jl.mockdata.mockdatagenerator.data.dto;
 
 import lombok.*;
 import uz.jl.mockdata.mockdatagenerator.data.entity.Field;
+import uz.jl.mockdata.mockdatagenerator.data.enums.DownloadTypeEnum;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DataCreateDTO {
     private List<Field> fields;
-    private String fileType;
+    private DownloadTypeEnum fileType;
     private int rowCount;
     private String tableName;
 }

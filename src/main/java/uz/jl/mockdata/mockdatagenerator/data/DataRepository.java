@@ -10,6 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface DataRepository extends JpaRepository<DataEntity, Integer> {
+
     Optional<DataEntity> findByCode(UUID code);
 
     @Transactional
