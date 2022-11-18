@@ -70,9 +70,10 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 120000)
     public void delete() {
-        List<DataEntity> list = repository.findAll().stream()
+        List<DataEntity> list = repository.findAll()
+                .stream()
                 .filter(DataEntity::isGet)
                 .toList();
         if (!list.isEmpty()) {
