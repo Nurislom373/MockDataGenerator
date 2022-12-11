@@ -18,7 +18,7 @@ public class DataController {
 
     private final DataService service;
 
-    @RequestMapping(value = "generate", method = RequestMethod.POST)
+    @RequestMapping(value = "generate", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> generateData(@RequestBody DataCreateDTO dto) {
         return new ResponseEntity<>(service.generate(dto), HttpStatus.OK);
     }
