@@ -67,10 +67,20 @@ function sendRequest() {
     console.log(json);
 
     let url = 'https://mockdatagenerator-production.up.railway.app/data/generate';
+    let urlLocal = 'http://localhost:8080/data/generate';
+    let downloadUrl = 'http://localhost:8080/data/get/';
 
-    sendData(url, json).then((data) => {
+    let id;
+
+    sendData(urlLocal, json).then((data) => {
         console.log(data);
+        id = data.data;
+        console.log(id);
     });
+
+    let url1 = URL.createObjectURL(downloadUrl + id);
+    console.log(url1);
+    URL.revokeObjectURL(url1);
 }
 
 async function sendData(url = '', json = {}) {
