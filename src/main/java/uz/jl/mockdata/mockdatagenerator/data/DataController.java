@@ -15,12 +15,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping(value = "/data/*")
 public class DataController {
-
     private final DataService service;
 
-    @RequestMapping(value = "generate", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> generateData(@RequestBody DataCreateDTO dto) {
-        return new ResponseEntity<>(service.generate(dto), HttpStatus.OK);
+    @RequestMapping(value = "generate", method = RequestMethod.POST)
+    public ResponseEntity<Data<UUID>> generateData(@RequestBody DataCreateDTO dto) {
+        return new ResponseEntity<>(new Data<>(service.generate(dto)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "get/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)

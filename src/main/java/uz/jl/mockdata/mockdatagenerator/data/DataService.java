@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface DataService {
 
-    Resource generate(DataCreateDTO dto);
+    UUID generate(DataCreateDTO dto);
 
     Resource get(UUID id);
 
