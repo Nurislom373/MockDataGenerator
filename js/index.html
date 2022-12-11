@@ -26,11 +26,11 @@
                         <div class="mb-3 inputs">
                             <div class="row mb-3" id="row-1">
                                 <div class="col-4">
-                                    <input type="text" name="fieldName" id="fieldName"
-                                           class="form-control" value="id"/>
+                                    <input type="text" name="fieldName"
+                                           class="form-control" value="Id"/>
                                 </div>
                                 <div class="col-4">
-                                    <select name="fieldType" id="fieldType" class="form-select">
+                                    <select name="fieldType" class="form-select">
                                         <option value="ID">ID</option>
                                         <option value="UUID">UUID</option>
                                         <option value="NAME">NAME</option>
@@ -61,17 +61,14 @@
                     </div>
 
                     <label htmlFor="select1" class="form-label">Choose Format</label>
-                    <select class="form-select" name="format" id="select1">
+                    <select class="form-select" name="choose_format" id="select1">
                         <option value="SQL" selected>SQL</option>
                         <option value="JSON">JSON</option>
                         <option value="CSV">CSV</option>
                     </select>
-
-                    <button type="submit" class="btn btn-primary mt-3 mb-5">Download</button>
+<!--                    <button type="submit" class="btn btn-primary mt-3 mb-5" >Download</button>-->
+                    <a href="#" class="btn btn-primary mt-3 mb-5" onclick="sendRequest()">Download</a>
                 </form>
-            </div>
-            <div class="col-lg-4">
-
             </div>
         </div>
     </div>
