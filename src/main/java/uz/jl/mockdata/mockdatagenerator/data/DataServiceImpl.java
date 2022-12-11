@@ -36,7 +36,7 @@ public class DataServiceImpl implements DataService {
     private final Faker faker;
 
     @Override
-    public UUID generate(DataCreateDTO dto) {
+    public Resource generate(DataCreateDTO dto) {
         checkData(dto);
         String file = createFile(dto.getTableName(), DownloadTypeEnum.getValue(dto.getFileType()));
         try (FileWriter fileWriter = new FileWriter(file)) {
@@ -52,7 +52,7 @@ public class DataServiceImpl implements DataService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return save(dto);
+        return get(save(dto));
     }
 
     @Override

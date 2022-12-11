@@ -6,7 +6,8 @@ import uz.jl.mockdata.mockdatagenerator.data.dto.DataCreateDTO;
 import java.util.UUID;
 
 public interface DataService {
-    UUID generate(DataCreateDTO dto);
+
+    Resource generate(DataCreateDTO dto);
 
     Resource get(UUID id);
 
