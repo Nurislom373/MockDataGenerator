@@ -149,6 +149,10 @@ public class DataServiceImpl implements DataService {
 
     public String createFile(String fileName, String type) {
         try {
+            File dir = new File("src/main/resources/file/");
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
             String newFile = fileName + "." + type;
             File file = new File("src/main/resources/file/" + newFile);
             file.createNewFile();
