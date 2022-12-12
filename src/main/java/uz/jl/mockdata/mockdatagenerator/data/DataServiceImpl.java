@@ -25,7 +25,15 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-
+/**
+ * Author: Nurislom
+ * <br/>
+ * Date: 12/11/2022
+ * <br/>
+ * Time: 11:01 PM
+ * <br/>
+ * Package: uz.jl.mockdata.mockdatagenerator.data
+ */
 @Service
 @RequiredArgsConstructor
 @EnableScheduling
@@ -113,18 +121,6 @@ public class DataServiceImpl implements DataService {
         return fieldList;
     }
 
-    private List<Field> getMockDataListWithStream(DataCreateDTO dto, Integer id) {
-        return dto.getFields()
-                .stream()
-                .map((field) -> setFieldVal(field, id))
-                .toList();
-    }
-
-    private Field setFieldVal(Field field, Integer id) {
-        field.setFieldType(getMockData(field.getFieldType(), id));
-        return field;
-    }
-
     public String getMockData(String type, Integer id) {
         return switch (FieldEnum.valueOf(type.toUpperCase(Locale.ROOT))) {
             case ID -> String.valueOf(id + 1);
@@ -149,10 +145,6 @@ public class DataServiceImpl implements DataService {
 
     public String createFile(String fileName, String type) {
         try {
-            File dir = new File("src/main/resources/file/");
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
             String newFile = fileName + "." + type;
             File file = new File("src/main/resources/file/" + newFile);
             file.createNewFile();
