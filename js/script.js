@@ -66,12 +66,12 @@ function sendRequest() {
     json.tableName = file_name;
     console.log(json);
 
+    let local = 'http://localhost:8080/';
     let url = 'https://mockdatagenerator-production.up.railway.app/';
     let post = 'data/generate';
     let get = 'data/get/';
-    let urlLocal = 'http://localhost:8080/data/generate';
-    let downloadUrl = 'http://localhost:8080/data/get/';
-
+    let urlLocal = url.concat(post);
+    let downloadUrl = url.concat(get);
     let getUrl;
 
     sendData(urlLocal, json).then((data) => {
@@ -85,6 +85,7 @@ function sendRequest() {
         a.download = fileName;
         a.href = getUrl;
         a.click();
+
         // Soon!
         // downloadFile(getUrl, fileName);
     });
