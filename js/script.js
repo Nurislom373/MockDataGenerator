@@ -66,37 +66,51 @@ function sendRequest() {
     json.tableName = file_name;
     console.log(json);
 
-    let url = 'https://mockdatagenerator-production.up.railway.app/data/generate';
+    let url = 'https://mockdatagenerator-production.up.railway.app/';
+    let post = 'data/generate';
+    let get = 'data/get/';
     let urlLocal = 'http://localhost:8080/data/generate';
     let downloadUrl = 'http://localhost:8080/data/get/';
 
-    let id;
+    let getUrl;
 
     sendData(urlLocal, json).then((data) => {
         console.log(data);
-        id = data.data;
-        console.log(id);
-    });
+        getUrl = downloadUrl.concat(data.data);
+        console.log(getUrl);
 
-    let url1 = URL.createObjectURL(downloadUrl + id);
-    console.log(url1);
-    URL.revokeObjectURL(url1);
+        const fileName = file_name.concat('.' + choose_format.toString().toLowerCase());
+        console.log(fileName);
+        const a = document.createElement("a");
+        a.download = fileName;
+        a.href = getUrl;
+        a.click();
+        // Soon!
+        // downloadFile(getUrl, fileName);
+    });
 }
 
 async function sendData(url = '', json = {}) {
     const response = await fetch(url, {
         method: 'POST',
-        // mode: 'cors',
-        // cache: 'no-cache',
-        // credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json'
         },
-        // redirect: 'follow',
-        // referrerPolicy: 'no-referrer',
         body: JSON.stringify(json)
     });
     return response.json();
+}
+
+function downloadFile(url, fileName) {
+    fetch(url, {method: 'get', mode: 'no-cors', referrerPolicy: 'no-referrer'})
+        .then(res => res.blob())
+        .then(data => {
+            let objectURL = URL.createObjectURL(data);
+            const a = document.createElement("a");
+            a.download = fileName;
+            a.href = objectURL;
+            a.click();
+        });
 }
 
 function addInput() {
