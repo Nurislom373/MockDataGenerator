@@ -70,8 +70,8 @@ function sendRequest() {
     let url = 'https://mockdatagenerator-production.up.railway.app/';
     let post = 'data/generate';
     let get = 'data/get/';
-    let urlLocal = url.concat(post);
-    let downloadUrl = url.concat(get);
+    let urlLocal = local.concat(post);
+    let downloadUrl = local.concat(get);
     let getUrl;
 
     sendData(urlLocal, json).then((data) => {
@@ -124,11 +124,11 @@ function addInput() {
     const field = document.createElement("input");
     field.type = "text";
     field.name = "fieldName";
-    field.className = "form-control";
+    field.className = "new-input";
 
     const select = document.createElement("select");
     select.name = "fieldType";
-    select.className = "form-select";
+    select.className = "new-input";
 
     for (let i = 0; i < array.length; i++) {
         let option = document.createElement("option");

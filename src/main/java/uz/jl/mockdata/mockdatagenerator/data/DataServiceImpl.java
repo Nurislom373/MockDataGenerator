@@ -2,6 +2,7 @@ package uz.jl.mockdata.mockdatagenerator.data;
 
 import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -12,7 +13,7 @@ import uz.jl.mockdata.mockdatagenerator.data.dto.DataCreateDTO;
 import uz.jl.mockdata.mockdatagenerator.data.entity.DataEntity;
 import uz.jl.mockdata.mockdatagenerator.data.entity.Field;
 import uz.jl.mockdata.mockdatagenerator.data.enums.DownloadTypeEnum;
-import uz.jl.mockdata.mockdatagenerator.data.enums.FieldEnum;
+import uz.jl.mockdata.mockdatagenerator.data.enums.MockType;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -64,21 +65,20 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public Resource get(UUID id) {
+    public File get(UUID id) {
         DataEntity dataEntity = repository.findByCode(id)
                 .orElseThrow(() -> new NotFoundException("Your Table data is not found!"));
         try {
             dataEntity.setGet(true);
             repository.save(dataEntity);
-            return new FileUrlResource(dataEntity.getPath());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
+            return new FileUrlResource(dataEntity.getPath()).getFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    @Scheduled(fixedDelay = 120000)
+//    @Scheduled(fixedDelay = 120000)
     public void delete() {
         List<DataEntity> list = repository.findAll()
                 .stream()
@@ -122,7 +122,7 @@ public class DataServiceImpl implements DataService {
     }
 
     public String getMockData(String type, Integer id) {
-        return switch (FieldEnum.valueOf(type.toUpperCase(Locale.ROOT))) {
+        return switch (MockType.valueOf(type.toUpperCase(Locale.ROOT))) {
             case ID -> String.valueOf(id + 1);
             case UUID -> faker.internet().uuid();
             case FIRST_NAME -> faker.name().firstName();
@@ -139,7 +139,8 @@ public class DataServiceImpl implements DataService {
             case NUMBER -> String.valueOf(faker.number().numberBetween(0, 1000));
             case TIME -> faker.date().birthday().toString();
             case UNIVERSITY -> faker.university().name();
-            default -> throw new IllegalStateException("Unexpected value: " + FieldEnum.valueOf(type));
+            case GENDER -> faker.book().title();
+            default -> throw new IllegalStateException("Unexpected value: " + MockType.valueOf(type));
         };
     }
 

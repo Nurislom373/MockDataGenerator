@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum FieldEnum {
+public enum MockType {
     ID(2, "ID", ""),
     NAME(1, "Name", ""),
     FIRST_NAME(1, "First Name", ""),

@@ -10,8 +10,7 @@ import java.util.Arrays;
 public enum DownloadTypeEnum {
     SQL("sql"),
     JSON("json"),
-    CSV("csv"),
-    TXT("txt");
+    CSV("csv");
 
     private final String value;
 

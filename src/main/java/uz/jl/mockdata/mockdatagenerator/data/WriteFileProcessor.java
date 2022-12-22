@@ -15,7 +15,6 @@ public class WriteFileProcessor {
             case CSV -> writeCSV(list, count);
             case SQL -> writeSQL(list, tableName);
             case JSON -> writeJSON(list, rowCount, count);
-            default -> throw new IllegalStateException("Unexpected value: " + type);
         };
     }
 

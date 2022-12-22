@@ -16,10 +16,10 @@
                 <form>
                     <div id="fields" class="mb-3">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-4 title">
                                 <h5>FieldName</h5>
                             </div>
-                            <div class="col-4">
+                            <div class="col-4 title">
                                 <h5>Type</h5>
                             </div>
                         </div>
@@ -27,10 +27,10 @@
                             <div class="row mb-3" id="row-1">
                                 <div class="col-4">
                                     <input type="text" name="fieldName"
-                                           class="form-control" value="Id"/>
+                                           class="new-input" value="id" required/>
                                 </div>
                                 <div class="col-4">
-                                    <select name="fieldType" class="form-select">
+                                    <select name="fieldType" class="new-input">
                                         <option value="ID">ID</option>
                                         <option value="UUID">UUID</option>
                                         <option value="NAME">NAME</option>
@@ -46,28 +46,28 @@
                                 </div>
                             </div>
                         </div>
-                        <!--                        <button class="btn btn-dark mt-3 add">Add Field</button>-->
                         <a href="#" class="btn btn-dark add">Add Field</a>
                     </div>
 
-                    <div class="mb-3">
-                        <label htmlFor="FileName1" class="form-label">File Name</label>
-                        <input type="text" value="Mock" name="file_name" class="form-control" id="FileName1"/>
-                    </div>
+                    <div class="col-8">
+                        <div class="mb-3">
+                            <label htmlFor="FileName1" class="new-label">File Name</label>
+                            <input type="text" value="mock" name="file_name" class="new-input" id="FileName1" required/>
+                        </div>
 
-                    <div class="mb-3">
-                        <label htmlFor="exampleInputPassword1" class="form-label">Row Count</label>
-                        <input type="number" value="100" name="row_count" class="form-control" id="exampleInputPassword1"/>
-                    </div>
+                        <div class="mb-3">
+                            <label htmlFor="exampleInputPassword1" class="new-label">Row Count</label>
+                            <input type="number" value="100" name="row_count" class="new-input" id="exampleInputPassword1" required/>
+                        </div>
 
-                    <label htmlFor="select1" class="form-label">Choose Format</label>
-                    <select class="form-select" name="choose_format" id="select1">
-                        <option value="SQL" selected>SQL</option>
-                        <option value="JSON">JSON</option>
-                        <option value="CSV">CSV</option>
-                    </select>
-<!--                    <button type="submit" class="btn btn-primary mt-3 mb-5" >Download</button>-->
-                    <a href="#" class="btn btn-primary mt-3 mb-5" onclick="sendRequest()">Download</a>
+                        <label htmlFor="select1" class="new-label">Choose Format</label>
+                        <select class="new-input" name="choose_format" id="select1" required>
+                            <option value="SQL" selected>SQL</option>
+                            <option value="JSON">JSON</option>
+                            <option value="CSV">CSV</option>
+                        </select>
+                    </div>
+                    <a href="#" class="btn btn-dark mt-3 mb-5" onclick="sendRequest()">Download</a>
                 </form>
             </div>
         </div>
