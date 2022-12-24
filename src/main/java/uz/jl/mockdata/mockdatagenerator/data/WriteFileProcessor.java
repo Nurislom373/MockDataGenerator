@@ -1,11 +1,10 @@
 package uz.jl.mockdata.mockdatagenerator.data;
 
 import org.springframework.stereotype.Component;
-import uz.jl.mockdata.mockdatagenerator.data.entity.Field;
+import uz.jl.mockdata.mockdatagenerator.data.dto.Field;
 import uz.jl.mockdata.mockdatagenerator.data.enums.DownloadTypeEnum;
 
 import java.util.List;
-import java.util.Locale;
 
 @Component
 public class WriteFileProcessor {

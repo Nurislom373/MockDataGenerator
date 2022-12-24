@@ -1,4 +1,4 @@
-package uz.jl.mockdata.mockdatagenerator.data.entity;
+package uz.jl.mockdata.mockdatagenerator.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

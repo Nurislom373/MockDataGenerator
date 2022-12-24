@@ -2,23 +2,19 @@ package uz.jl.mockdata.mockdatagenerator.data;
 
 import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.FileUrlResource;
-import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uz.jl.mockdata.mockdatagenerator.data.dto.DataCreateDTO;
 import uz.jl.mockdata.mockdatagenerator.data.entity.DataEntity;
-import uz.jl.mockdata.mockdatagenerator.data.entity.Field;
+import uz.jl.mockdata.mockdatagenerator.data.dto.Field;
 import uz.jl.mockdata.mockdatagenerator.data.enums.DownloadTypeEnum;
 import uz.jl.mockdata.mockdatagenerator.data.enums.MockType;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

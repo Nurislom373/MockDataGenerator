@@ -13,11 +13,13 @@ import java.time.LocalDateTime;
  * Time: 12:31 PM
  * <br/>
  * Package: uz.jl.mockdata.mockdatagenerator.data
- * <p>
+ * <br/>
  *
+ * <p>
  * This class implements MockService and CreateMockData services.
  * The main purpose of this abstract class is to generate mock data through the Faker class.
  * AbstractMockService class has only one method and this method returns data on the mock type enum entered.
+ * </p>
  *
  * @version 2.0
  * @see CreateMocData

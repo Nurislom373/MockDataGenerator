@@ -19,6 +19,5 @@ import uz.jl.mockdata.mockdatagenerator.data.enums.MockType;
 @ToString
 public class NewFieldValue {
     private String name;
-
     private String value;
 }

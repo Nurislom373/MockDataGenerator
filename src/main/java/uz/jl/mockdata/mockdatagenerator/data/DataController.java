@@ -6,10 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import uz.jl.mockdata.mockdatagenerator.data.dto.DataCreateDTO;
+import uz.jl.mockdata.mockdatagenerator.data.new_version.NewDataCreateDTO;
+import uz.jl.mockdata.mockdatagenerator.data.new_version.NewDataService;
 import uz.jl.mockdata.mockdatagenerator.response.Data;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,10 +26,16 @@ import java.util.UUID;
 public class DataController {
 
     private final DataService service;
+    private final NewDataService newDataService;
 
     @RequestMapping(value = "generate", method = RequestMethod.POST)
-    public ResponseEntity<Data<UUID>> generateData(@RequestBody DataCreateDTO dto) {
-        return new ResponseEntity<>(new Data<>(service.generate(dto)), HttpStatus.OK);
+    public ResponseEntity<Data<UUID>> generateData(@Valid @RequestBody DataCreateDTO dto) {
+        return new ResponseEntity<>(new Data<>(service.generate(dto)), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "new_generate", method = RequestMethod.POST)
+    public ResponseEntity<Data<UUID>> newGenerateData(@Valid @RequestBody NewDataCreateDTO dto) {
+        return new ResponseEntity<>(new Data<>(newDataService.generate(dto)), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "get/{id}", method = RequestMethod.GET)

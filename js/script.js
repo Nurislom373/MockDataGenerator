@@ -2,7 +2,8 @@ const addBtn = document.querySelector(".add");
 
 const inputs = document.querySelector(".inputs");
 
-const array = ["ID", "UUID", "NAME", "FIRST_NAME", "LAST_NAME", "LOREM", "ADDRESS", "IPV4ADDRESS"];
+const array = ["ID", "UUID", "NAME", "FIRST_NAME", "LAST_NAME", "LOREM", "ADDRESS", "IPV4ADDRESS",
+    "BOOLEAN", "JOB", "EMAIL", "DATE_NOW", "MD5", "NUMBER", "TIME", "UNIVERSITY"];
 
 let elementsByName = document.getElementsByName('fieldName');
 console.log(elementsByName)
