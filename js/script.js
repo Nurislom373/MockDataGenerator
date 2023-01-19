@@ -170,3 +170,18 @@ function addInput() {
 }
 
 addBtn.addEventListener("click", addInput);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

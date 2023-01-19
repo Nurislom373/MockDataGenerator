@@ -12,4 +12,5 @@ public class MockDataGeneratorApplication {
     public static void main(String[] args) {
         SpringApplication.run(MockDataGeneratorApplication.class, args);
     }
+
 }
