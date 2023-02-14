@@ -39,18 +39,7 @@ public class DataController {
     }
 
     @RequestMapping(value = "get/{id}", method = RequestMethod.GET)
-    public void get(HttpServletRequest request, HttpServletResponse response, @PathVariable UUID id) throws IOException {
-        File file = service.get(id);
-        if (file.exists()) {
-            String name = URLConnection.guessContentTypeFromName(file.getName());
-            if (name == null) {
-                name = "application/octet-stream";
-            }
-            response.setContentType(name);
-            response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() +"\""));
-            response.setContentLength((int) file.length());
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
-            FileCopyUtils.copy(bufferedInputStream, response.getOutputStream());
-        }
+    public void get(HttpServletResponse response, @PathVariable UUID id) {
+        service.get(response, id);
     }
 }

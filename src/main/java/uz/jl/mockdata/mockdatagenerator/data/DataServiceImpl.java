@@ -5,16 +5,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+import org.springframework.util.FileCopyUtils;
 import uz.jl.mockdata.mockdatagenerator.data.dto.DataCreateDTO;
 import uz.jl.mockdata.mockdatagenerator.data.entity.DataEntity;
 import uz.jl.mockdata.mockdatagenerator.data.dto.Field;
 import uz.jl.mockdata.mockdatagenerator.data.enums.DownloadTypeEnum;
 import uz.jl.mockdata.mockdatagenerator.data.enums.MockType;
+import uz.jl.mockdata.mockdatagenerator.data.exceptions.InternalServerException;
+import uz.jl.mockdata.mockdatagenerator.data.exceptions.NotFoundException;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +42,13 @@ public class DataServiceImpl implements DataService {
     private final WriteFileProcessor processor;
     private final Faker faker;
 
+    @Deprecated
     @Override
     public UUID generate(DataCreateDTO dto) {
         checkData(dto);
         String file = createFile(dto.getTableName(), DownloadTypeEnum.getValue(dto.getFileType()));
         try (FileWriter fileWriter = new FileWriter(file)) {
-            IntStream.range(0, dto.getRowCount()).forEach(i -> {
+            IntStream.rangeClosed(0, dto.getRowCount()).forEach(i -> {
                 try {
                     List<Field> mockDataList = getMockDataList(dto, i);
                     fileWriter.write(processor.processorType(dto.getFileType(), mockDataList,
@@ -61,15 +64,30 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public File get(UUID id) {
+    public void get(HttpServletResponse response, UUID id) {
         DataEntity dataEntity = repository.findByCode(id)
                 .orElseThrow(() -> new NotFoundException("Your Table data is not found!"));
         try {
             dataEntity.setGet(true);
             repository.save(dataEntity);
-            return new FileUrlResource(dataEntity.getPath()).getFile();
+            internGet(response, new FileUrlResource(dataEntity.getPath()).getFile());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new InternalServerException();
+        }
+    }
+
+    private void internGet(HttpServletResponse response, File file) throws IOException {
+        if (file.exists()) {
+            String name = URLConnection.guessContentTypeFromName(file.getName());
+            if (name == null) {
+                name = "application/octet-stream";
+            }
+            response.setContentType(name);
+            response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() +"\""));
+            response.setContentLength((int) file.length());
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
+            FileCopyUtils.copy(bufferedInputStream, response.getOutputStream());
         }
     }
 
@@ -97,6 +115,7 @@ public class DataServiceImpl implements DataService {
         }
     }
 
+    @Deprecated
     private UUID save(DataCreateDTO dto) {
         DataEntity data = new DataEntity();
         data.setCount(dto.getRowCount());
@@ -147,8 +166,7 @@ public class DataServiceImpl implements DataService {
             file.createNewFile();
             return "src/main/resources/file/" + newFile;
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException();
         }
     }
 }

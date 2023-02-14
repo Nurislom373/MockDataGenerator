@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 import uz.jl.mockdata.mockdatagenerator.data.DataRepository;
 import uz.jl.mockdata.mockdatagenerator.data.entity.DataEntity;
 import uz.jl.mockdata.mockdatagenerator.data.enums.DownloadTypeEnum;
+import uz.jl.mockdata.mockdatagenerator.data.exceptions.InternalServerException;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -36,20 +38,26 @@ public class NewDataService {
 
     public UUID generate(NewDataCreateDTO dto) {
         String file = createFile(dto.getTableName(), DownloadTypeEnum.getValue(dto.getFileType()));
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            IntStream.range(0, dto.getRowCount()).forEach(i -> {
-                try {
-                    List<NewFieldValue> list = mocData.getMockDataList(dto, i);
-                    fileWriter.write(processor.processorType(dto.getFileType(), list,
-                            dto.getTableName(), dto.getRowCount(), i));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        } catch (Exception e) {
+
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file))) {
+            writer(dto, fileWriter);
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return save(dto);
+    }
+
+    private void writer(NewDataCreateDTO dto, BufferedWriter fileWriter) {
+        IntStream.range(0, dto.getRowCount()).forEach(i -> {
+            try {
+                List<NewFieldValue> list = mocData.getMockDataList(dto, i);
+                fileWriter.write(processor.processorType(dto.getFileType(), list,
+                        dto.getTableName(), dto.getRowCount(), i));
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new InternalServerException();
+            }
+        });
     }
 
     private UUID save(NewDataCreateDTO dto) {
@@ -69,7 +77,7 @@ public class NewDataService {
             return "src/main/resources/file/" + newFile;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            throw new InternalServerException();
         }
     }
 

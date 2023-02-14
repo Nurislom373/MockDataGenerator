@@ -5,18 +5,18 @@ package uz.jl.mockdata.mockdatagenerator.data.exceptions;
  * <br/>
  * Date: 1/19/2023
  * <br/>
- * Time: 4:50 PM
+ * Time: 5:43 PM
  * <br/>
  * Package: uz.jl.mockdata.mockdatagenerator.data.exceptions
  */
-public class NotFoundException extends RuntimeException {
+public class InternalServerException extends RuntimeException {
 
     /**
      * Constructs a new runtime exception with {@code null} as its
      * detail message.  The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause}.
      */
-    public NotFoundException() {
+    public InternalServerException() {
         super();
     }
 
@@ -28,7 +28,7 @@ public class NotFoundException extends RuntimeException {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public NotFoundException(String message) {
+    public InternalServerException(String message) {
         super(message);
     }
 
@@ -46,7 +46,7 @@ public class NotFoundException extends RuntimeException {
      *                unknown.)
      * @since 1.4
      */
-    public NotFoundException(String message, Throwable cause) {
+    public InternalServerException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -63,7 +63,7 @@ public class NotFoundException extends RuntimeException {
      *              unknown.)
      * @since 1.4
      */
-    public NotFoundException(Throwable cause) {
+    public InternalServerException(Throwable cause) {
         super(cause);
     }
 
@@ -81,7 +81,7 @@ public class NotFoundException extends RuntimeException {
      *                           be writable
      * @since 1.7
      */
-    public NotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public InternalServerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
